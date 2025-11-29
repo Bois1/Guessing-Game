@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guessing Game</title>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .blink { animation: blinker 1s linear infinite; }
+    @keyframes blinker { 50% { opacity: 0; } }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center py-8">
+  <div id="app" class="w-full max-w-2xl px-4">
+    <h1 class="text-3xl font-bold text-center text-indigo-700 mb-6">Live Guessing Game</h1>
+
+   
+    <div id="createJoin" class="bg-white p-6 rounded shadow mb-6">
+      <div class="flex gap-2 mb-4">
+        <input id="playerName" type="text" placeholder="Your name" class="border px-3 py-2 rounded flex-1" maxlength="20"/>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="createGame()" class="bg-green-600 text-white px-4 py-2 rounded">Create Game</button>
+        <input id="sessionIdInput" type="text" placeholder="Session ID" class="border px-3 py-2 w-32" maxlength="6"/>
+        <button onclick="joinGame()" class="bg-blue-600 text-white px-4 py-2 rounded">Join Game</button>
+      </div>
+    </div>
+
+   
+    <div id="gameView" class="hidden">
+      <div class="bg-white p-4 rounded shadow mb-4 flex justify-between items-center">
+        <div>
+          <span class="font-bold">Session:</span> <span id="displaySessionId" class="font-mono"></span>
+          <div>Status: <span id="gameStatus" class="font-semibold">Waiting...</span></div>
+        </div>
+        <div>Round: <span id="roundCounter">1</span>/5</div>
+      </div>
+
+  
+      <div class="bg-white p-4 rounded shadow mb-4">
+        <h3 class="font-bold mb-2">Players ({{players.length}}):</h3>
+        <div id="playersList" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      
+      <div id="questionArea" class="hidden bg-indigo-50 p-4 rounded mb-4">
+        <p class="text-lg font-semibold" id="questionText"></p>
+      </div>
+
+      
+      <div id="guessArea" class="hidden bg-white p-4 rounded shadow mb-4">
+        <input id="guessInput" type="text" placeholder="Your guess..." class="border px-3 py-2 w-full mb-2" maxlength="50"/>
+        <button onclick="submitGuess()" class="bg-indigo-600 text-white px-4 py-2 rounded w-full">Submit Guess</button>
+        <div id="typingIndicator" class="text-sm text-gray-500 mt-1"></div>
+      </div>
+
+   
+      <div id="masterControls" class="hidden bg-yellow-50 p-4 rounded shadow mb-4">
+        <h3 class="font-bold mb-2">Game Master: Set Question</h3>
+        <input id="questionInput" type="text" placeholder="Question" class="border px-3 py-2 w-full mb-2"/>
+        <input id="answerInput" type="text" placeholder="Answer" class="border px-3 py-2 w-full mb-2"/>
+        <button onclick="submitQuestion()" class="bg-red-600 text-white px-4 py-2 rounded w-full mb-2">Submit Question</button>
+        <button onclick="startGame()" id="startBtn" class="bg-green-600 text-white px-4 py-2 rounded w-full">Start Game (≥3 players)</button>
+      </div>
+
+   
+      <div id="resultsArea" class="hidden bg-white p-4 rounded shadow">
+        <p id="resultsText" class="text-lg"></p>
+        <button onclick="nextRound()" id="nextRoundBtn" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hidden">Next Round</button>
+      </div>
+    </div>
+
+  
+    <div id="messages" class="mt-4 text-red-600 font-medium"></div>
+  </div>
+
+  <script src="client.js"></script>
+</body>
+</html>

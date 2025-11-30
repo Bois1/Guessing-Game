@@ -96,7 +96,7 @@ io.on('connection', (socket) => {
     const { error, value } = submitQuestionSchema.validate(data);
     if (error) return socket.emit('error', { message: error.details[0].message });
 
-    await setQuestion(data.sessionId, value.question, value.answer); // ✅ await
+    await setQuestion(data.sessionId, value.question, value.answer);
     io.to(data.sessionId).emit('questionReady');
   });
 

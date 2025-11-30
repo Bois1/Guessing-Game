@@ -119,7 +119,6 @@ socket.on('userStoppedTyping', (data) => {
 
 
 function renderUI() {
-  const session = //;
   if (isGameMaster) {
     masterControls.classList.remove('hidden');
   } else {
